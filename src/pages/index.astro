@@ -1,0 +1,66 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+// Get all vocabulary entries
+const vocabularyEntries = await getCollection('vocabulary');
+---
+
+<Layout title="Vocabulary Trainer">
+  <main class="container mx-auto px-4 py-8 max-w-4xl">
+    <!-- Header -->
+    <header class="text-center mb-12">
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+        📚 Vocabulary Trainer
+      </h1>
+      <p class="text-lg md:text-xl text-gray-600">
+        Learn English vocabulary in a fun and interactive way
+      </p>
+    </header>
+
+    <!-- Vocabulary Cards -->
+    <section class="space-y-6">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-6">
+        Vocabulary Words ({vocabularyEntries.length})
+      </h2>
+      
+      {vocabularyEntries.length === 0 ? (
+        <div class="bg-white rounded-lg shadow-md p-8 text-center">
+          <p class="text-gray-600 text-lg">
+            No vocabulary words yet. Add some markdown files to the <code class="bg-gray-100 px-2 py-1 rounded">src/content/vocabulary</code> folder!
+          </p>
+        </div>
+      ) : (
+        <div class="grid gap-6 md:grid-cols-2">
+          {vocabularyEntries.map((entry) => (
+            <a 
+              href={`/vocabulary/${entry.slug}`}
+              class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow duration-300 border-l-4 border-primary-500"
+            >
+              <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                {entry.data.word}
+              </h3>
+              <p class="text-gray-600 mb-2">
+                <span class="font-medium">Translation:</span> {entry.data.translation}
+              </p>
+              {entry.data.category && (
+                <span class="inline-block bg-primary-100 text-primary-800 text-sm px-3 py-1 rounded-full">
+                  {entry.data.category}
+                </span>
+              )}
+            </a>
+          ))}
+        </div>
+      )}
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-16 text-center text-gray-600">
+      <p class="text-sm">
+        Built with ❤️ using <a href="https://astro.build" class="text-primary-600 hover:underline">Astro</a>, 
+        <a href="https://www.typescriptlang.org/" class="text-primary-600 hover:underline">TypeScript</a>, and 
+        <a href="https://tailwindcss.com" class="text-primary-600 hover:underline">Tailwind CSS</a>
+      </p>
+    </footer>
+  </main>
+</Layout>
